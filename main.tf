@@ -1,41 +1,73 @@
 provider "aws" {
-  region = "us-west-2"  # specify your region
+  region     = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 resource "aws_dynamodb_table" "tutorials" {
   name         = "tutorials"
-  billing_mode = "PAY_PER_REQUEST"  # or PROVISIONED with read/write capacity units
+  billing_mode = "PAY_PER_REQUEST"
 
   attribute {
     name = "id"
-    type = "N"  # Number type for the id
+    type = "N"
   }
-
-  hash_key = "id"
 
   attribute {
     name = "title"
-    type = "S"  # String type for the title
+    type = "S"
   }
 
   attribute {
     name = "description"
-    type = "S"  # String type for the description
+    type = "S"
   }
 
   attribute {
     name = "published"
-    type = "N"  # Number type for the published (use 0 or 1)
+    type = "N"
   }
 
   attribute {
     name = "createdAt"
-    type = "S"  # String type for the createdAt (store ISO 8601 format)
+    type = "S"
   }
 
   attribute {
     name = "updatedAt"
-    type = "S"  # String type for the updatedAt (store ISO 8601 format)
+    type = "S"
+  }
+
+  hash_key = "id"
+
+  global_secondary_index {
+    name            = "title-index"
+    hash_key        = "title"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "description-index"
+    hash_key        = "description"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "published-index"
+    hash_key        = "published"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "createdAt-index"
+    hash_key        = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "updatedAt-index"
+    hash_key        = "updatedAt"
+    projection_type = "ALL"
   }
 
   tags = {
